@@ -5,8 +5,7 @@ pygame.init()
 WIDTH = 640
 HEIGHT = 480
 SIZE = (WIDTH, HEIGHT)
-Hamlet_hitpoint = 3
-Laertes_hitpoint = 3 
+
 screen = pygame.display.set_mode(SIZE)
 clock = pygame.time.Clock()
 characters = pygame.image.load("hamlet\\Characters.png")
@@ -50,7 +49,7 @@ def main_menu():
                     click = True
     
         screen.fill((GRAY))
-        draw_text("Hamlet's duel", pygame.font.SysFont(None, 80), (BLACK), screen, 45, 100)
+        draw_text("Hamlet Duel", pygame.font.SysFont(None, 80), (BLACK), screen, 45, 100)
         draw_text('Beat Laertes in a duel to win!', font, (BLACK), screen, 50, 200)
         mx , my = pygame.mouse.get_pos()
         
@@ -62,13 +61,15 @@ def main_menu():
             pygame.draw.rect(screen, RED,(200,300,200,100),3)
             if click:
                 game()      
-       
+
         
        
         pygame.display.flip()
         clock.tick(60)
-    
+
 def game():
+    Hamlet_hitpoint = 3
+    Laertes_hitpoint = 3 
     running = True
     click = False
     Hamlet_selection = 0
@@ -106,22 +107,49 @@ def game():
             pygame.draw.rect(screen, RED,(40,350,100,100),2) 
             if click:
                 Hamlet_selection = 1
+                if Hamlet_selection == 1 and Laertes_selection ==1:
+                    Hamlet_hitpoint -= 1 
+                    Laertes_hitpoint -= 1
+                    Laertes_selection = random.randrange(1,4)
+                elif Hamlet_selection == 1 and Laertes_selection ==2:
+                    Laertes_selection = random.randrange(1,4)
+                
+                elif Hamlet_selection == 1 and Laertes_selection ==3:
+                    Hamlet_hitpoint -= 1 
+                    Laertes_selection = random.randrange(1,4)
         if Block.collidepoint((mx,my)):
             pygame.draw.rect(screen, RED,(150,350,100,100),2) 
             if click:
                 Hamlet_selection = 2
+                if Hamlet_selection == 2 and Laertes_selection ==1:
+                        Laertes_selection = random.randrange(1,4)
+                elif Hamlet_selection == 2 and Laertes_selection ==2:
+                        Laertes_selection = random.randrange(1,4)
+                elif Hamlet_selection == 2 and Laertes_selection ==3:
+                        Laertes_selection = random.randrange(1,4)
         if Parry.collidepoint((mx,my)):
             pygame.draw.rect(screen, RED,(260,350,100,100),2) 
             if click:
                 Hamlet_selection = 3
-                
+                if Hamlet_selection == 3 and Laertes_selection ==1:
+                    Laertes_hitpoint -= 1
+                    Laertes_selection = random.randrange(1,4)
+
+                elif Hamlet_selection == 3 and Laertes_selection ==2:
+                    Laertes_selection = random.randrange(1,4)
+
+                elif Hamlet_selection == 3 and Laertes_selection ==3:
+                    Laertes_selection = random.randrange(1,4) 
         
         if Hamlet_hitpoint == 0:
-            end("Laetres Wins")
+            end("Laertes Wins")
+            return
         elif Laertes_hitpoint == 0:
             end("Hamlet Wins")
+            return
         elif Hamlet_hitpoint == 0 and Laertes_hitpoint == 0: 
             end("Both Lose")
+            return
 
         
     
@@ -146,9 +174,18 @@ def end(result):
                         click = True
 
             screen.fill((255,212,135))
-
+            mx , my = pygame.mouse.get_pos()
             draw_text(f'{result}', pygame.font.SysFont(None, 80), (BLACK), screen, 45, 100)
-            
+            Button_1 = pygame.draw.rect(screen, BLACK,(200,300,200,100)) 
+        
+            draw_text("Return", pygame.font.SysFont(None, 50) ,BLUE,screen,240,330)
+        
+            if Button_1.collidepoint((mx,my)):
+                pygame.draw.rect(screen, RED,(200,300,200,100),3)
+                if click:
+                    return
+           
+           
             pygame.display.flip()
             clock.tick(60)
 main_menu()
